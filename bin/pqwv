@@ -1,0 +1,68 @@
+#!/usr/bin/env ruby
+require 'github_api'
+require 'open-uri'
+require 'nokogiri'
+require 'openssl'
+require 'webrick'
+require 'git'
+require 'launchy'
+require 'optparse'
+
+def get_branch_name_of_pq(user,repository,issue_number)
+  github = Github.new
+  issues = github.issues.get user: user, repo: repository, number: issue_number
+  doc = Nokogiri::HTML(open(issues[:html_url],:ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)
+  branch_name = doc.css('span.css-truncate-target')[1].to_s.gsub(/<("[^"]*"|'[^']*'|[^'">])*>/,"").to_s
+end
+
+def fetch_and_open(branch_name)
+  begin
+    g = Git.open(Dir.pwd)
+    g.fetch(g.remotes.first)
+    g.checkout(branch_name)
+    t = Thread.new do
+      WEBrick::HTTPServer.new(:DocumentRoot => "./",:Port => 8000).start
+    end
+    Launchy.open "http://localhost:8000"
+    t.join
+  rescue => e
+    puts e
+    STDERR.puts("This Directory is not git directory.")
+    exit(1)
+  end
+end
+
+def get_defalut_repository
+  option = {}
+  remote_url = Git.open(Dir.pwd).config('remote.origin.url')
+  if remote_url.start_with?  "git@"
+    option[:user] = remote_url.split(":")[1].split("/")[0]
+    option[:repository] = remote_url.split(":")[1].split("/")[1].gsub(/.git$/,"")
+  else
+    option[:user] = remote_url.gsub("https://github.com/","").split("/")[0]
+    option[:repository] = remote_url.gsub("https://github.com/","").split("/")[1]
+  end
+  return option
+end
+
+option = get_defalut_repository
+
+OptionParser.new do |opt|
+  opt.on('-r VALUE', 'Repository name (example: sh4869/sh4869.github.io)') { |v|
+    option[:user] = v.split("/")[0]
+    option[:repository] = v.split("/")[1]
+  }
+  opt.on('-n VALUE','Number of Pull Request') {|v| option[:pq_number] = v.to_i}
+  opt.parse!(ARGV)
+end
+
+if option[:pq_number] == nil
+  if ARGV.count == 0
+    STDERR.puts("Pull Request Number is required")
+    exit(1)
+  else
+    option[:pq_number] = ARGV[0]
+  end
+end
+
+fetch_and_open(get_branch_name_of_pq(option[:user],option[:repository],option[:pq_number]))
