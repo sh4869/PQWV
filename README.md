@@ -15,7 +15,7 @@ $ gem install pkg/PQWV-0.1.0.gem
 Or
 
 ```
-$ gem install pqwv
+$ gem install PQWV
 ```
 
 ## Usage
