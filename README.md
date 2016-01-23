@@ -1,6 +1,6 @@
 # PQWV
 
-![travis ci status](https://travis-ci.org/sh4869/PQWV.svg?branch=master)
+![travis ci status](https://travis-ci.org/sh4869/PQWV.svg?branch=master) [![Gem Version](https://badge.fury.io/rb/PQWV.svg)](https://badge.fury.io/rb/PQWV)
 
 A Tool to view web pages on pull request brach.
 
