@@ -1,5 +1,7 @@
 # PQWV
 
+![travis ci status](https://travis-ci.org/sh4869/PQWV.svg?branch=master)
+
 A Tool to view web pages on pull request brach.
 
 ## Installation
