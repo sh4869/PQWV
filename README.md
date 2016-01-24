@@ -1,18 +1,10 @@
 # PQWV
 
-![travis ci status](https://travis-ci.org/sh4869/PQWV.svg?branch=master) [![Gem Version](https://badge.fury.io/rb/PQWV.svg)](https://badge.fury.io/rb/PQWV)
+[![travis ci status](https://travis-ci.org/sh4869/PQWV.svg?branch=master)](https://travis-ci.org/sh4869/PQWV) [![Gem Version](https://badge.fury.io/rb/PQWV.svg)](https://badge.fury.io/rb/PQWV)
 
 A Tool to view web pages on pull request brach.
 
 ## Installation
-
-```
-$ git clone https://github.com/sh4869/pqwv
-$ rake install
-$ gem install pkg/PQWV-0.1.0.gem
-```
-
-Or
 
 ```
 $ gem install PQWV
@@ -20,9 +12,10 @@ $ gem install PQWV
 
 ## Usage
 
-```
+```sh
 $ cd /path/to/your/webpage/directory
 $ pqwv [number of pull request you want to check]
+# Start server on localhost:8000, and open browser Automatically
 ```
 
 ## Contributing
